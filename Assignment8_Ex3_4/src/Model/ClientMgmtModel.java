@@ -20,7 +20,7 @@ public class ClientMgmtModel {
 	
 	public String connectionURL = "jdbc:mysql://localhost:3306/clientdb",  
 			  username          = "root",
-			  password       = "Dimesfordays22";
+			  password       = "Dimesfordays96";
 	
 	public void initializeConnection() {
 
@@ -52,7 +52,7 @@ public class ClientMgmtModel {
 	{
 		System.out.println("CREATING Table...");
 		String sql = "CREATE TABLE " + tableName + "(" +
-					 "ID VARCHAR(4) NOT NULL, " +
+					 "ID INT(4) NOT NULL, " +
 				     "FIRST_NAME VARCHAR(20) NOT NULL, " +
 				     "LAST_NAME VARCHAR(20) NOT NULL, " + 
 				     "ADDRESS VARCHAR(50) NOT NULL, " + 
@@ -91,6 +91,9 @@ public class ClientMgmtModel {
 				clientID ++;
 			}
 			sc.close();
+			//String sql = "SELECT * FROM " + tableName + " ORDER BY ID;";
+			//pStat = conn.prepareStatement(sql);
+			//pStat.executeQuery();
 		}
 		catch(FileNotFoundException e)
 		{
@@ -99,6 +102,25 @@ public class ClientMgmtModel {
 		catch(Exception e)
 		{
 			e.printStackTrace();
+		}
+	}
+	
+	public int generateID() {
+		String sql = "SELECT ID FROM " + tableName + " ORDER BY ID DESC LIMIT 1;" ;
+		try {
+			pStat = conn.prepareStatement(sql);
+			ResultSet rSet = pStat.executeQuery();
+			int lastID = 0;
+			while(rSet.next()) {
+				lastID = rSet.getInt("ID");
+			}
+			rSet.close();
+			return lastID;
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+			return 0;
 		}
 	}
 	
@@ -239,6 +261,33 @@ public class ClientMgmtModel {
 								                clients.getString("LAST_NAME") + "     " + 
 								"TYPE: " + clients.getString("CLIENT_TYPE");
 				clientString+="\n";
+			}
+			clients.close();
+			return clientString;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return "Error in loading client names. Please try again.";
+		}
+	}
+	
+	public String showOnRightPanel(int passedID) {
+		try {
+			String sql = "SELECT * FROM " + tableName + " WHERE id = ?";
+			pStat = conn.prepareStatement(sql);
+			pStat.setInt(1, passedID);
+			ResultSet clients = pStat.executeQuery();
+			String clientString = "";
+			while(clients.next())
+			{
+				clientString += clients.getInt("ID") +"\n"+ 
+								clients.getString("FIRST_NAME") + "\n" + 
+								clients.getString("LAST_NAME") + "\n" +
+								clients.getString("ADDRESS") + "\n" +
+								clients.getString("POSTAL_CODE") + "\n" +
+								clients.getString("PHONE_NUMBER") + "\n" +
+								clients.getString("CLIENT_TYPE");
+
+				//clientString+="\n";
 			}
 			clients.close();
 			return clientString;

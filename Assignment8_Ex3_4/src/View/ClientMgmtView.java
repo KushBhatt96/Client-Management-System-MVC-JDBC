@@ -6,13 +6,16 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -45,7 +48,8 @@ public class ClientMgmtView extends JFrame {
 	private JButton grid92;
 	private JButton grid93;
 	
-	private JTextArea scrollArea;
+	private JList scrollArea;
+	DefaultListModel listModel;
 
 
 	public ClientMgmtView(){
@@ -147,6 +151,7 @@ public class ClientMgmtView extends JFrame {
 		titlePanelC.add(grid21);
 		
 		grid22 = new JTextField();
+		grid22.setEditable(false);
 		titlePanelC.add(grid22);
 		
 		JLabel grid23 = new JLabel("");
@@ -215,8 +220,9 @@ public class ClientMgmtView extends JFrame {
 		grid93 = new JButton("Clear");
 		titlePanelC.add(grid93);
 
-		scrollArea = new JTextArea();
-		scrollArea.setEditable(false);
+		listModel = new DefaultListModel();
+		scrollArea = new JList(listModel);
+		//scrollArea.setEditable(false);
 		JScrollPane scroll = new JScrollPane(scrollArea);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		titlePanelWC.add("Center",scroll);
@@ -258,7 +264,7 @@ public class ClientMgmtView extends JFrame {
 	
 	//This will display the records within the text area
 	public void setTextArea(String filteredClientList) {
-		scrollArea.setText(filteredClientList);
+		listModel.addElement(filteredClientList);
 	}
 	
 	//Action could not be performed message in case of any problem in execution of actionEvent
@@ -267,7 +273,7 @@ public class ClientMgmtView extends JFrame {
 	}
 	
 	public void clearSearch() {
-		scrollArea.setText("");
+		listModel.removeAllElements();
 		enterSearchTF.setText("");
 	}
 
@@ -303,6 +309,34 @@ public class ClientMgmtView extends JFrame {
 		return grid82.getText();
 	}
 	
+	public void clientIDSetText(String passedClientID) {
+		grid22.setText(passedClientID);
+	}
+	
+	public void fNameSetText(String passedFName) {
+		grid32.setText(passedFName);
+	}
+	
+	public void lNameSetText(String passedLName) {
+		grid42.setText(passedLName);
+	}
+	
+	public void addressSetText(String passedAddress) {
+		grid52.setText(passedAddress);
+	}
+	
+	public void postalCodeSetText(String passedPC) {
+		grid62.setText(passedPC);
+	}
+	
+	public void phoneNumSetText(String passedPhoneNum) {
+		grid72.setText(passedPhoneNum);
+	}
+	
+	public void clientTypeSetText(String passedType) {
+		grid82.setText(passedType);
+	}
+	
 	public void registerSaveButton(ActionListener listenForSave) {
 		grid91.addActionListener(listenForSave);
 	}
@@ -313,6 +347,10 @@ public class ClientMgmtView extends JFrame {
 	
 	public void registerClear2Button(ActionListener listenForClear2) {
 		grid93.addActionListener(listenForClear2);
+	}
+	
+	public void registerScrollArea(MouseListener listenForScrollArea) {
+		scrollArea.addMouseListener(listenForScrollArea);
 	}
 	
 	public void saveSuccessfulMessage() {
@@ -329,6 +367,14 @@ public class ClientMgmtView extends JFrame {
 	
 	public void clientExists() {
 		JOptionPane.showMessageDialog(btnSearch, "A client by this ID already exists. Data for user will be modified.");
+	}
+	
+	public String clickOnTextArea() {
+		return (String) scrollArea.getSelectedValue();
+	}
+	
+	public void clearJList() {
+		listModel.removeAllElements();
 	}
 	
 	public void clearRightPanel() {
