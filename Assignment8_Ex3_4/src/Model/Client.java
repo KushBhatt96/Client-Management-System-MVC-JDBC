@@ -1,7 +1,17 @@
 package Model;
 
+/**
+ * The Client class holds information related to each client. This includes ID, first and last name, 
+ * address, postal code, phone number, and client type.
+ * @author Kush
+ * @version 1.0
+ * @since 11/12/2019
+ */
 public class Client {
 	
+	/**
+	 * Client object attributes.
+	 */
 	private int clientID;
 	private String firstName;
 	private String lastName;

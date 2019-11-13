@@ -8,22 +8,36 @@ import java.awt.event.MouseListener;
 import Model.Client;
 import Model.ClientMgmtModel;
 import View.ClientMgmtView;
-
+/**
+ * This class takes user input from the GUI, feeds it to the Model class for processing, and then returns
+ * the results back to the View class to display on the GUI. It is responsible for handling all events.
+ * @author Kush
+ * @version 1.0
+ * @since 11/12/2019
+ */
 public class ClientMgmtController {
 	
+	/**
+	 * Access to View class.
+	 */
 	private ClientMgmtView appView;
+	/**
+	 * Access to Model class.
+	 */
 	private ClientMgmtModel appModel;
 	
 	public ClientMgmtController(ClientMgmtView passedAppView, ClientMgmtModel passedAppModel) {
 		appView = passedAppView;
 		appModel = passedAppModel;
-		
-		appModel.initializeConnection();
+		String userPass = appView.getPasswordFromUser();
+		appModel.initializeConnection(userPass);
 		//appModel.createDatabase();
 		appModel.createTable();
 		appModel.fillTable();
 	
-		//calling to register the functions in View with ActionListener inner classes here in the Controller
+		/**
+		 * Calling to register the functions in View with ActionListener inner classes here in the Controller
+		 */
 		appView.registerSearchBtn(new SearchButtonListener());
 		appView.registerClearSearchBtn(new ClearButtonListener());
 		appView.registerSaveButton(new SaveButtonListener());
@@ -33,6 +47,14 @@ public class ClientMgmtController {
 	}
 
 //LEFT PANEL ACTION LISTENERS-------------------------------------------------------------
+	
+	/**
+	 * Initiates a search based on either ID, last name, or client type. Returns the search results back 
+	 * to the View for display.
+	 * @author Kush
+	 * @version 1.0
+	 * @since 11/12/2019
+	 */
 	public class SearchButtonListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent searchEvent) {
@@ -42,7 +64,6 @@ public class ClientMgmtController {
 			try {
 				userSearchEntry = appView.getSearchTextField();
 				if (appView.getRadioButton() == 1) {          //1 refers to a search based on Client ID
-					//appView.setTextArea(appModel.searchClientID(Integer.parseInt(userSearchEntry)));
 					clientText = appModel.searchClientID(Integer.parseInt(userSearchEntry));
 					String [] clientList = clientText.split("\n");
 					for (int i = 0; i< clientList.length;i++) {
@@ -50,7 +71,6 @@ public class ClientMgmtController {
 					}
 				}
 				else if (appView.getRadioButton() == 2) {     //2 refers to a search based on Last Name
-					//appView.setTextArea(appModel.searchLastName(userSearchEntry));
 					clientText = appModel.searchLastName(userSearchEntry);
 					String [] clientList = clientText.split("\n");
 					for (int i = 0; i< clientList.length;i++) {
@@ -58,20 +78,24 @@ public class ClientMgmtController {
 					}
 				}
 				else if (appView.getRadioButton() == 3) {     //3 refers to a search based on Client Type
-					//appView.setTextArea(appModel.searchClientType(userSearchEntry));
 					clientText = appModel.searchClientType(userSearchEntry);
 					String [] clientList = clientText.split("\n");
 					for (int i = 0; i< clientList.length;i++) {
 						appView.setTextArea(clientList[i]);
 					}
 				}
-				
 			}catch(Exception e) {
 				appView.actionNotPerformed();
 			}
 		}
 	}
 	
+	/**
+	 * Clear button for erasing all input on the Left panel and re-starting the search.
+	 * @author Kush
+	 * @version 1.0
+	 * @since 11/12/2019
+	 */
 	public class ClearButtonListener implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent clearEvent) {
@@ -86,6 +110,13 @@ public class ClientMgmtController {
 //FINISH-----------------------------------------------------------------------------------	
 	
 //RIGHT PANEL ACTION LISTENERS-------------------------------------------------------------
+	/**
+	 * Allows for the addition of new clients or the modification of existing clients. Does a double check
+	 * to ensure that all inputs are valid.
+	 * @author Kush
+	 * @version 1.0
+	 * @since 11/12/2019
+	 */
 	public class SaveButtonListener implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent saveEvent) {
@@ -114,9 +145,6 @@ public class ClientMgmtController {
 				appView.actionNotPerformed();
 				System.out.println("length! problem");
 			}
-			//else if(ID) { //Ensure ID does not already exist
-			//	appModel.searchClientID(ID).isEmpty()
-			//}
 			
 			else {
 			
@@ -136,6 +164,12 @@ public class ClientMgmtController {
 	}
 	}
 	
+	/**
+	 * Deletes a record from the database.
+	 * @author Kush
+	 * @version 1.0
+	 * @since 11/12/2019
+	 */
 	public class DeleteButtonListener implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent deleteEvent) {
@@ -162,6 +196,12 @@ public class ClientMgmtController {
 	}
 	}
 	
+	/**
+	 * Clears the right side panel and allows the user to start over.
+	 * @author Kush
+	 * @version 1.0
+	 * @since 11/12/2019
+	 */
 	public class Clear2ButtonListener implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent clear2Event) {
@@ -173,6 +213,13 @@ public class ClientMgmtController {
 	}
 	}
 	
+	/**
+	 * ScrollAreaListener is a Mouselistener that waits for an a client record to be selected from the 
+	 * scroll area, and then fetches all the information for that client from the Model class.
+	 * @author Kush
+	 * @version 1.0
+	 * @since 11/12/2019
+	 */
 	public class ScrollAreaListener implements MouseListener{
 
 		@Override

@@ -26,8 +26,16 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
+/**
+ * Contains the JFrame and all components that create the GUI.
+ * @author Kush
+ * @version 1.0
+ * @since 11/12/2019
+ */
 public class ClientMgmtView extends JFrame {
-	
+	/**
+	 * Declaration of components in the JFrame.
+	 */
 	private JRadioButton rButton1;
 	private JRadioButton rButton2;
 	private JRadioButton rButton3;
@@ -49,9 +57,11 @@ public class ClientMgmtView extends JFrame {
 	private JButton grid93;
 	
 	private JList scrollArea;
-	DefaultListModel listModel;
+	private DefaultListModel listModel;
 
-
+	/**
+	 * Constructor for the GUI class. Assigns values to the components.
+	 */
 	public ClientMgmtView(){
 		setTitle("Client Management System");
 		setSize(900,600);
@@ -59,22 +69,30 @@ public class ClientMgmtView extends JFrame {
 		setLayout(new BorderLayout());                      // Sets a BorderLayout
 		setMinimumSize(new Dimension(400, 300)); 
 		
-		//North: Panel with Heading/Title
-		
+
 		JLabel title = new JLabel("Client Management Screen");
 		Font font = new Font("Segoe UI", Font.BOLD, 20);
 		title.setFont(font);
 		
+		/**
+		 * North panel for the GUI heading
+		 */
 		JPanel titlePanelN = new JPanel();
 		titlePanelN.add(title);
 		add("North", titlePanelN);
 		titlePanelN.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 		
+		/**
+		 * West panel for the Search Clients features and scroll area
+		 */
 		JPanel titlePanelW = new JPanel();
 		titlePanelW.setLayout(new BorderLayout());
 		add("West", titlePanelW);
 		titlePanelW.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 		
+		/**
+		 * Center panel for the Client Information features and text fields
+		 */
 		JPanel titlePanelC = new JPanel();
 		titlePanelC.setLayout(new GridLayout(9,3, 0,35));
 		add("Center", titlePanelC);
@@ -100,6 +118,9 @@ public class ClientMgmtView extends JFrame {
 		searchType.setFont(fontsearchType);
 		titlePanelWN.add(searchType);
 		
+		/**
+		 * Radio buttons for choosing the type of search.
+		 */
 		rButton1 = new JRadioButton("Client ID");
 		rButton1.setFont(fontsearchType);
 		titlePanelWN.add(rButton1);
@@ -113,6 +134,9 @@ public class ClientMgmtView extends JFrame {
 		titlePanelWN.add(rButton3);
 		
 		rButton1.setSelected(true);
+		/**
+		 * A button grouping that ensures that only one option is selected at one time.
+		 */
 		rBtnGroup = new ButtonGroup();
 		rBtnGroup.add(rButton1);
 		rBtnGroup.add(rButton2);
@@ -136,6 +160,10 @@ public class ClientMgmtView extends JFrame {
 		title3.setFont(font3);
 		titlePanelWC.add("North",title3);
 		
+		/**
+		 * Right side panel containing a grid layout. It contains GUI components for
+		 * all of the client information.
+		 */
 		JLabel grid11 = new JLabel("");
 		titlePanelC.add(grid11);
 		
@@ -220,9 +248,11 @@ public class ClientMgmtView extends JFrame {
 		grid93 = new JButton("Clear");
 		titlePanelC.add(grid93);
 
+		/**
+		 * Scroll area that lists the results from the search.
+		 */
 		listModel = new DefaultListModel();
 		scrollArea = new JList(listModel);
-		//scrollArea.setEditable(false);
 		JScrollPane scroll = new JScrollPane(scrollArea);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		titlePanelWC.add("Center",scroll);
@@ -232,7 +262,10 @@ public class ClientMgmtView extends JFrame {
 
 //LEFT PANEL EVENT HANDLING---------------------------------------------------------------------
 	
-	//Determine which of the 3 radio buttons is selected
+	/**
+	 * Determines which search type is selected.
+	 * @return
+	 */
 	public int getRadioButton() {
 		if(rButton1.isSelected()) {
 			return 1;
@@ -247,31 +280,49 @@ public class ClientMgmtView extends JFrame {
 		return 1;
 	}
 	
-	//This will return the contents of the search textfield
+	/**
+	 * Returns contents of the search textfield in the west panel.
+	 * @return
+	 */
 	public String getSearchTextField() {
 		return enterSearchTF.getText();
 	}
 	
-	//Here we are registering the search button to an ActionListener class in the controller
+	/**
+	 * Registers the search button to an ActionListener class in the controller
+	 * @param listenSearchBtn
+	 */
 	public void registerSearchBtn(ActionListener listenSearchBtn) {
 		btnSearch.addActionListener(listenSearchBtn);
 	}
 	
-	//Here we are registering the clear search button to an ActionListener in the controller
+	/**
+	 * Registers the clear button on the west panel to an ActionListener class in the controller
+	 * @param listenClearSearchBtn
+	 */
 	public void registerClearSearchBtn(ActionListener listenClearSearchBtn) {
 		btnClearSearch.addActionListener(listenClearSearchBtn);
 	}
 	
-	//This will display the records within the text area
+	
+	/**
+	 * Displays the records within the search text area
+	 * @param filteredClientList
+	 */
 	public void setTextArea(String filteredClientList) {
 		listModel.addElement(filteredClientList);
 	}
 	
-	//Action could not be performed message in case of any problem in execution of actionEvent
+	/**
+	 * Action could not be performed message in case of any problem in execution of actionEvent
+	 */
 	public void actionNotPerformed() {
 		JOptionPane.showMessageDialog(btnSearch, "The action could not be performed. Please check your inputs.");
 	}
 	
+	/**
+	 * Clears all search inputs, as well as the search text area.
+	 */
 	public void clearSearch() {
 		listModel.removeAllElements();
 		enterSearchTF.setText("");
@@ -281,6 +332,10 @@ public class ClientMgmtView extends JFrame {
 	
 //RIGHT PANEL EVENT HANDLING--------------------------------------------------------------------
 
+	/**
+	 * Gets the text inputs from text fields in the east panel.
+	 * @return
+	 */
 	public String clientIDText() {
 		return grid22.getText();
 	}
@@ -309,6 +364,10 @@ public class ClientMgmtView extends JFrame {
 		return grid82.getText();
 	}
 	
+	/**
+	 * Sets the text inputs in the text fields in the east panel.
+	 * @param passedClientID
+	 */
 	public void clientIDSetText(String passedClientID) {
 		grid22.setText(passedClientID);
 	}
@@ -337,46 +396,84 @@ public class ClientMgmtView extends JFrame {
 		grid82.setText(passedType);
 	}
 	
+	/**
+	 * Registers save button to ActionListener inner class in Controller class
+	 * @param listenForSave
+	 */
 	public void registerSaveButton(ActionListener listenForSave) {
 		grid91.addActionListener(listenForSave);
 	}
 	
+	/**
+	 * Registers delete button to ActionListener inner class in Controller class
+	 * @param listenForDelete
+	 */
 	public void registerDeleteButton(ActionListener listenForDelete) {
 		grid92.addActionListener(listenForDelete);
 	}
 	
+	/**
+	 * Registers clear button on east panel to ActionListener inner class in Controller class
+	 * @param listenForClear2
+	 */
 	public void registerClear2Button(ActionListener listenForClear2) {
 		grid93.addActionListener(listenForClear2);
 	}
 	
+	/**
+	 * Registers the search text area to a MouseListener inner class in the Controller class
+	 * @param listenForScrollArea
+	 */
 	public void registerScrollArea(MouseListener listenForScrollArea) {
 		scrollArea.addMouseListener(listenForScrollArea);
 	}
 	
+	/**
+	 * Save successful message
+	 */
 	public void saveSuccessfulMessage() {
 		JOptionPane.showMessageDialog(grid91, "Save Successful!");
 	}
 	
+	/**
+	 * Delete successful message
+	 */
 	public void deleteSuccessfulMessage() {
 		JOptionPane.showMessageDialog(grid92, "Delete Successful");
 	}
 	
+	/**
+	 * Message indicating that delete could not be performed
+	 */
 	public void deleteNotPerformed() {
 		JOptionPane.showMessageDialog(btnSearch, "In order to delete a client record, you must input BOTH *id* and *last name*.");
 	}
 	
+	/**
+	 * Message that indicates that a client with a certain ID already exists
+	 */
 	public void clientExists() {
 		JOptionPane.showMessageDialog(btnSearch, "A client by this ID already exists. Data for user will be modified.");
 	}
 	
+	/**
+	 * Gets text from the list in the search results area
+	 * @return
+	 */
 	public String clickOnTextArea() {
 		return (String) scrollArea.getSelectedValue();
 	}
 	
+	/**
+	 * Clears the search results area
+	 */
 	public void clearJList() {
 		listModel.removeAllElements();
 	}
 	
+	/**
+	 * Clears all inputs from the text fields on the east panel
+	 */
 	public void clearRightPanel() {
 		grid22.setText("");
 		grid32.setText("");
@@ -385,6 +482,11 @@ public class ClientMgmtView extends JFrame {
 		grid62.setText("");
 		grid72.setText("");
 		grid82.setText("");
+	}
+	
+	public String getPasswordFromUser() {
+		String passWord = JOptionPane.showInputDialog("Please enter password to your database system: ");
+		return passWord;
 	}
 	
 }

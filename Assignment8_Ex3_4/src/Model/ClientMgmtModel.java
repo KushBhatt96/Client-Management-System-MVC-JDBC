@@ -11,19 +11,43 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 
-
+/**
+ * The Model class is responsible for the creation of the database and data table that
+ * will store client information. It handles any queries, manipulation, deleting, and addition
+ * of data records.
+ * @author Kush
+ * @version 1.0
+ * @since 11/12/2019
+ */
 public class ClientMgmtModel {
 	
+	/**
+	 * The conn variable which is responsible for creating a connection with the database.
+	 */
 	private Connection conn;
+	/**
+	 * pStat takes in queries for data insertion, manipulation, retrieval, and removal.
+	 */
 	private PreparedStatement pStat;
+	/**
+	 * The database name, table name, and file name containing information about the clients.
+	 */
 	private String databaseName = "clientdb", tableName = "Client", dataFile = "clients.txt";
 	
+	/**
+	 * Connection URL, user-name, and password for the database.
+	 */
 	public String connectionURL = "jdbc:mysql://localhost:3306/clientdb",  
 			  username          = "root",
-			  password       = "Dimesfordays96";
+			  password       ;  //Password for database system will be prompted from user.
 	
-	public void initializeConnection() {
-
+	/**
+	 * This method initializes the connection between the Java program and the database system by connecting
+	 * to a specific driver of the database system.
+	 */
+	public void initializeConnection(String userPass) {
+		
+		password = userPass;
             //Register JDBC driver
 			try {
 				System.out.println("INITIALIZING...");
@@ -35,7 +59,9 @@ public class ClientMgmtModel {
 			catch(Exception e) { e.printStackTrace(); }
 	}
 	
-	//Next we will use a preparedStatement to create a DB
+	/**
+	 * This method creates an empty database in the database system.
+	 */
 	public void createDatabase() {
 		System.out.println("CREATING DB...");
 		String sql = "CREATE DATABASE " + databaseName;
@@ -47,7 +73,9 @@ public class ClientMgmtModel {
 		catch(Exception e) { e.printStackTrace(); }
 	}
 	
-	//Create a Table
+	/**
+	 * Creates a table in the database with information regarding the client as the columns.
+	 */
 	public void createTable()
 	{
 		System.out.println("CREATING Table...");
@@ -71,7 +99,9 @@ public class ClientMgmtModel {
 		}
 	}
 	
-	//Fill in the table
+	/**
+	 * Fills in the table with information from a given text file.
+	 */
 	public void fillTable()
 	{
 		System.out.println("FILLING Table...");
@@ -91,9 +121,6 @@ public class ClientMgmtModel {
 				clientID ++;
 			}
 			sc.close();
-			//String sql = "SELECT * FROM " + tableName + " ORDER BY ID;";
-			//pStat = conn.prepareStatement(sql);
-			//pStat.executeQuery();
 		}
 		catch(FileNotFoundException e)
 		{
@@ -105,6 +132,10 @@ public class ClientMgmtModel {
 		}
 	}
 	
+	/**
+	 * This function generates a new ID for a new user that is added to the data table.
+	 * @return
+	 */
 	public int generateID() {
 		String sql = "SELECT ID FROM " + tableName + " ORDER BY ID DESC LIMIT 1;" ;
 		try {
@@ -124,7 +155,10 @@ public class ClientMgmtModel {
 		}
 	}
 	
-	
+	/**
+	 * Adds a client to the data table.
+	 * @param client
+	 */
 	public void addClient(Client client)
 	{
 		System.out.println("Adding Client...");
@@ -148,7 +182,10 @@ public class ClientMgmtModel {
 		}
 	}
 	
-	
+	/**
+	 * Updates information regarding an existing client in the data table.
+	 * @param client
+	 */
 	public void updateClient(Client client)
 	{
 		System.out.println("Updating Client...");
@@ -174,7 +211,10 @@ public class ClientMgmtModel {
 	}
 	
 	
-	
+	/**
+	 * Removes a client record from the data table.
+	 * @param client
+	 */
 	public void deleteClient(Client client)
 	{
 		System.out.println("Deleting Client...");
@@ -194,7 +234,11 @@ public class ClientMgmtModel {
 	}
 	
 	
-	// Search client by ID
+	/**
+	 * Searches for a client based on a given ID.
+	 * @param searchID
+	 * @return
+	 */
 	public String searchClientID(int searchID)
 	{
 		try {
@@ -220,7 +264,11 @@ public class ClientMgmtModel {
 	}
 	
 	
-	// Search client by Last Name
+	/**
+	 * Searches for clients based on entries given for last name.
+	 * @param userSearchEntry
+	 * @return
+	 */
 	public String searchLastName(String userSearchEntry)
 	{
 		try {
@@ -245,7 +293,11 @@ public class ClientMgmtModel {
 		}
 	}
 	
-	// Search client by Client Type
+	/**
+	 * Searches for clients based on their client type.
+	 * @param userSearchEntry
+	 * @return
+	 */
 	public String searchClientType(String userSearchEntry)
 	{
 		try {
@@ -270,6 +322,12 @@ public class ClientMgmtModel {
 		}
 	}
 	
+	/**
+	 * Retrieves all information regarding a selected client to be displayed on the GUI by the View
+	 * class.
+	 * @param passedID
+	 * @return
+	 */
 	public String showOnRightPanel(int passedID) {
 		try {
 			String sql = "SELECT * FROM " + tableName + " WHERE id = ?";
